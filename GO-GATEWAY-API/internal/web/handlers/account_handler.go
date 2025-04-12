@@ -9,9 +9,9 @@ import (
 )
 
 type AccountHandler struct {
-	accountService service.AccountService
+	accountService *service.AccountService
 }
-func NewAccountHandler(accountService service.AccountService) *AccountHandler {
+func NewAccountHandler(accountService *service.AccountService) *AccountHandler {
 	return &AccountHandler{accountService: accountService}
 }
  func (h *AccountHandler) Create(w http.ResponseWriter, r *http.Request) {

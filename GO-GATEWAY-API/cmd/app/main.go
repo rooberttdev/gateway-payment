@@ -23,7 +23,6 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	// String de conexão com o banco de dados
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		getEnv("DB_HOST", "localhost"),
 		getEnv("DB_PORT", "5432"),
@@ -40,8 +39,11 @@ func main() {
 	
 	accountRepository := repository.NewAccountRepository(db)
 	accountService := service.NewAccountService(*accountRepository)
+	invoiceRepository := repository.NewInvoiceRepository(db)
+	ivoiceService := service.NewInvoiceService(invoiceRepository, accountService)
+
 	port := getEnv("HTTP_PORT", "8080")
-	srv := server.NewServer(*accountService, port)
+	srv := server.NewServer(accountService, ivoiceService, port)
 	srv.ConfigureRoutes()
 	
 	srv.Start()

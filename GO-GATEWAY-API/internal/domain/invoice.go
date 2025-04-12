@@ -10,9 +10,9 @@ import (
 type Status string
 
 const (
-	StatusPending 	  Status = "pending"
-	StatusApproved    Status = "approved"
-	StatusRejected    Status = "rejected"
+	StatusPending  Status = "pending"
+	StatusApproved Status = "approved"
+	StatusRejected Status = "rejected"
 )
 
 type Invoice struct {
@@ -28,10 +28,10 @@ type Invoice struct {
 }
 
 type CreditCard struct {
-	Number string
-	CVV    string
-	ExpiryMonth int
-	ExpiryYear  int
+	Number         string
+	CVV            string
+	ExpiryMonth    int
+	ExpiryYear     int
 	CardholderName string
 }
 
@@ -55,15 +55,15 @@ func NewInvoice(accountID string, amount float64, description string, paymentTyp
 	}, nil
 }
 
-func(i *Invoice) Process() error {
-	if i.Amount <= 1000 {
+func (i *Invoice) Process() error {
+	if i.Amount > 10000 {
 		return nil
 	}
 
-	randomSource := rand.New(rand.NewSource(time.Now().UnixNano()))
+	randomSource := rand.New(rand.NewSource(time.Now().Unix()))
 	var newStatus Status
 
-	if randomSource.Float64() <= 0.7{
+	if randomSource.Float64() <= 0.7 {
 		newStatus = StatusApproved
 	} else {
 		newStatus = StatusRejected
@@ -71,10 +71,9 @@ func(i *Invoice) Process() error {
 
 	i.Status = newStatus
 	return nil
-
 }
 
-func(i *Invoice) UpdateStatus(newStatus Status) error {
+func (i *Invoice) UpdateStatus(newStatus Status) error {
 	if i.Status != StatusPending {
 		return ErrInvalidStatus
 	}
@@ -83,4 +82,3 @@ func(i *Invoice) UpdateStatus(newStatus Status) error {
 	i.UpdatedAt = time.Now()
 	return nil
 }
-

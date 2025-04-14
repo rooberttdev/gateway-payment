@@ -45,7 +45,8 @@ func main() {
 	port := getEnv("HTTP_PORT", "8080")
 	srv := server.NewServer(accountService, ivoiceService, port)
 	srv.ConfigureRoutes()
-	
+	log.Printf("🚀 Servidor iniciado na porta %s", port)
+
 	srv.Start()
 	if err != nil {
 		log.Fatal("Error starting server:", err)

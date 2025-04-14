@@ -1,4 +1,18 @@
+version: "3.8"
+
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: sh -c "go run cmd/app/main.go"
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     image: postgres:16-alpine
     ports:
@@ -10,7 +24,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres "]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
